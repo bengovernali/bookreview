@@ -26,7 +26,6 @@ class User {
                     ($1, $2, $3, $4)
                 returning id
                 ` , [this.first_name, this.last_name, this.email, this.password]);
-            console.log("user was created with id:", response.id);
             return response;
         } catch(err) {
             return err.message;
@@ -47,6 +46,19 @@ class User {
             } else {
                 return { isValid }
             };
+        } catch(err) {
+            return err.message;
+        }
+    }
+
+    async getProfile() {
+        try {
+            const response = await db.one(`
+            select first_name, last_name, email
+                from users
+            where users.id = $1`, [this.id]);
+            const { first_name, last_name, email } = response;
+            return { first_name, last_name, email };
         } catch(err) {
             return err.message;
         }

@@ -21,7 +21,6 @@ router.get('/:book_id', async (req, res, next) => {
     const b_id = req.params.book_id;
     const oneBook = await booksModel.getOne(b_id);
     const reviews = await reviewModel.getReviews(b_id);
-    console.log(reviews);
     res.render('template', {
         locals: {
             title: 'Book Info',

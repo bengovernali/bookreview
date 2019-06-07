@@ -41,6 +41,22 @@ router.get('/signup', (req, res) => {
   })
 });
 
+router.get('/profile', async (req, res, next) => {
+  const u_id = req.session.user_id;
+  const userInstance = new User(u_id, null, null, null, null);
+  const userInfo = await userInstance.getProfile();
+  res.render('template', {
+    locals: {
+        title: 'User Profile',
+        userData: userInfo,
+        is_logged_in: req.session.is_logged_in
+    },
+    partials: {
+        partial: 'partial-user-profile'
+    }
+  });
+})
+
 router.post('/login', (req, res) => {
   const {email, password } = req.body;
 
