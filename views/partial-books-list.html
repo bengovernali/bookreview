@@ -1,0 +1,16 @@
+<section class="section">
+    <table class="table">
+        <thead>
+            <tr>
+                <td>Book Title</td>
+            </tr>
+        </thead>
+        ${listOfBooks.map(book =>
+            `<tr>
+                    <td>
+                        <a href="/books/${book.id}">${book.name}</a>
+                    </td>
+                </tr>`
+            ).join('')}
+    </table>
+</section>
