@@ -42,27 +42,30 @@ exports.profile_get = async (req, res) => {
     });
 }
 
-exports.logout = (req, res) => {
+exports.logout_get = (req, res) => {
     req.session.destroy();
     res.redirect('/');
 }
 
-exports.login_post = (req, res) => {
+exports.login_post = async (req, res) => {
     const {email, password } = req.body;
-
     const userInstance = new Users(null, null, null, email, password);
 
-    userInstance.login().then(response => {
-        req.session.is_logged_in = response.isValid;
-        if (!!response.isValid) {
-            req.session.first_name = response.first_name;
-            req.session.last_name = response.last_name;
-            req.session.user_id = response.user_id;
-            res.redirect('/');
-        } else {
-            res.sendStatus(401);
-        }
-    });
+    const userData = await userInstance.getUserByEmail();
+    console.log(userData);
+
+    const isValid = bcrypt.compareSync(password, userData.password);
+
+    if (!!isValid) {
+        req.session.first_name = userData.first_name;
+        req.session.last_name = userData.last_name;
+        req.session.user_id = userData.id;
+        req.session.is_logged_in = true;
+        console.log(req.session.first_name, req.session.last_name, req.session.user_id);
+        res.redirect('/');
+    } else {
+        res.sendStatus(401);
+    }
 }
 
 exports.signup_post = (req, res) => {

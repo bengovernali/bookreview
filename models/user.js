@@ -1,5 +1,4 @@
-const db = require('./conn'),
-    bcrypt = require('bcryptjs');
+const db = require('./conn');
 
 class User {
     constructor(id, first_name, last_name, email, password) {
@@ -8,13 +7,6 @@ class User {
         this.last_name = last_name;
         this.email = email;
         this.password = password;
-    }
-    
-    async checkPassword(hashedPassword) {
-        //syntax: bcrypt.compareSync(arg1, arg2)
-        //first arg is what user put in form
-        //second arg is the hashed password
-        return bcrypt.compareSync(this.password, hashedPassword);
     }
 
     async save() {
@@ -32,20 +24,13 @@ class User {
         }
     }
 
-    async login() {
+    async getUserByEmail() {
         try {
             const response = await db.one(`
                 select id, first_name, last_name, password
                     from users
                 where email = $1`, [this.email]);
-            const isValid = await this.checkPassword(response.password);
-            if (!!isValid) {
-                const { first_name, last_name, id } = response;
-                //this line will return the isValid, first name, last name, and user id
-                return  { isValid, first_name, last_name, user_id: id }
-            } else {
-                return { isValid }
-            };
+            return response;
         } catch(err) {
             return err.message;
         }
