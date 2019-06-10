@@ -5,19 +5,6 @@ const express = require('express'),
 const User = require('../models/user');
 const UsersControllers = require('../controllers/userController');
 
-/* GET users listing. */
-router.get('/', (req, res, next) => {
-  res.render('template', {
-    locals: {
-        title: 'User Page',
-        is_logged_in: req.session.is_logged_in,
-    },
-    partials: {
-        partial: 'partial-users'
-    }
-  });
-});
-
 router.get('/login', UsersControllers.login_get);
 
 router.get('/signup', UsersControllers.signup_get);
