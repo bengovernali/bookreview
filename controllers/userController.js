@@ -75,8 +75,7 @@ exports.signup_post = (req, res) => {
     //create new user instance, with sign up info
     const userInstance = new Users(null, first_name, last_name, email, hash);
 
-    userInstance.save().then(response => {
-        console.log("response is", response);
-        res.sendStatus(200);
+    userInstance.save().then(() => {
+        res.redirect('/');
     });
 }
