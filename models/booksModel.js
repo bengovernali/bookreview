@@ -23,7 +23,7 @@ class Books {
     }
     static async getOne(b_id) {
         try {
-            let response = await db.any(
+            let response = await db.one(
                 `select
                     id, name, author, genre
                 from
@@ -38,10 +38,8 @@ class Books {
     }
     static async createReview(id, content, score, user_id) {
         const query = `insert into reviews (score, content, book_id, user_id) values (${score}, '${content}', ${id}, ${user_id});`;
-        console.log(query);
         try {
             let response = await db.result(query);
-            console.log(response);
             return response;
         } catch(err) {
             return err.message
